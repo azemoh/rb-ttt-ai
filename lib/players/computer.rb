@@ -1,14 +1,11 @@
 class Computer < Player
   include Concerns::Winable
-  attr_reader :board
-
-  INFINITY = 1.0/0.0
 
   # Return best move index + 1
   def move(board)
     puts "Com #{token} is thinking..."
     @board = board
-    (min_max(4, token, -INFINITY, INFINITY)[1]+1).to_s
+    (min_max(4, token, -Float::INFINITY, Float::INFINITY)[1]+1).to_s
   end
 
   # Return array of possible moves
@@ -29,14 +26,11 @@ class Computer < Player
   def evaluate
     score = 0
     # Evaluate score for each wining combination
-    score += evaluate_combo(WIN_COMBINATIONS[0])
-    score += evaluate_combo(WIN_COMBINATIONS[1])
-    score += evaluate_combo(WIN_COMBINATIONS[2])
-    score += evaluate_combo(WIN_COMBINATIONS[3])
-    score += evaluate_combo(WIN_COMBINATIONS[4])
-    score += evaluate_combo(WIN_COMBINATIONS[5])
-    score += evaluate_combo(WIN_COMBINATIONS[6])
-    score += evaluate_combo(WIN_COMBINATIONS[7])
+    WIN_COMBINATIONS.each do |combo|
+      score += evaluate_combo(combo)
+    end
+
+    score
   end
 
   # Evaluate board with a wining combination
@@ -49,9 +43,9 @@ class Computer < Player
     # Cell 1
     if board.cells[combo[0]] == token
       score = 1
-     elsif board.cells[combo[0]] == rival_token
+    elsif board.cells[combo[0]] == rival_token
       score = -1
-     end
+    end
 
     # Cell 2: two in a row
     if board.cells[combo[1]] == token
@@ -101,7 +95,7 @@ class Computer < Player
     score = 0
 
     # Return best move when Game over or dept reached
-    if possible_moves.size == 0 || dept == 0
+    if over? || dept == 0
       score = evaluate
       return [score, best_move]
     end

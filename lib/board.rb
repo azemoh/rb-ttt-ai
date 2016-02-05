@@ -34,7 +34,7 @@ class Board
   end
 
   def valid_move?(cell)
-    (1..9).include?(cell.to_i)  && !taken?(cell)
+    cell.to_i.between?(1,9)  && !taken?(cell)
   end
 
   def update(cell, player)

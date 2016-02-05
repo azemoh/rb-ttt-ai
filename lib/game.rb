@@ -1,6 +1,6 @@
 class Game
   include Concerns::Winable
-  attr_accessor :board, :player_1, :player_2
+  attr_accessor :player_1, :player_2
 
   def initialize(player_1 = Human.new("X"), player_2 = Human.new("O"), board = Board.new)
     @board = board
@@ -9,25 +9,19 @@ class Game
   end
 
   def current_player
-    board.turn_count % 2 == 0 ? player_1 : player_2
-  end
-
-  def over?
-    draw? || won?
-  end
-
-  def draw?
-    board.full? && !won?
+    board.turn_count.even? ? player_1 : player_2
   end
 
   def winner
-    board.cells[won?.first] if won?
+    if won = won?
+      board.cells[won.first]
+    end
   end
 
   def turn
     cell = current_player.move(board)
 
-    until board.valid_move?(cell)
+    if !board.valid_move?(cell)
       puts "Wrong move buddy!"
       turn
       return

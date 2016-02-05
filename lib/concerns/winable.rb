@@ -1,5 +1,6 @@
 module Concerns
   module Winable
+    attr_accessor :board
 
     WIN_COMBINATIONS = [
       [0, 1, 2],
@@ -18,5 +19,14 @@ module Concerns
         combo.all? {|i| board.cells[i] == "X"} || combo.all? {|i| board.cells[i] == "O"}
       end
     end
+
+    def over?
+      won? || draw?
+    end
+
+    def draw?
+      board.full? && !won?
+    end
+
   end
 end
