@@ -24,11 +24,10 @@ class Game
     if !board.valid_move?(cell)
       puts "Wrong move buddy!"
       turn
-      return
+    else
+      board.update(cell, current_player)
+      board.display
     end
-
-    board.update(cell, current_player)
-    board.display
   end
 
   def play
